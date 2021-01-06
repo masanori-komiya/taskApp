@@ -20,6 +20,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // 日付の近い順でソート：昇順
     // 以降内容をアップデートするとリスト内は自動的に更新される。
     var taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true)
+    
 
     
     override func viewDidLoad() {
@@ -27,18 +28,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        searchBar.delegate = self
     }
     //データの数(セルの数)を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return taskArray.count
     }
     
-    func setupSearchBar(){
-        searchBar.delegate = self
-    }
-    
-    //  検索バーに入力があったら呼ばれる
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
         let searchText = searchBar.text!
         taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true).filter("category BEGINSWITH %@", searchText)
         tableView.reloadData()
