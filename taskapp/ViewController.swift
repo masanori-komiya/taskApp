@@ -35,9 +35,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return taskArray.count
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
         let searchText = searchBar.text!
-        taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true).filter("category BEGINSWITH %@", searchText)
+        if(searchText == "") {
+            taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true)
+        } else {
+            taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true).filter("category BEGINSWITH %@", searchText)
+        }
         tableView.reloadData()
     }
     
